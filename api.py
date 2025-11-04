@@ -27,7 +27,7 @@ def get_db_connection():
 def index():
     conn = get_db_connection()
     parts = [row['atlas_organism_part'] for row in conn.execute(
-        'SELECT DISTINCT atlas_organism_part FROM Expression ORDER BY atlas_organism_part'
+        'SELECT DISTINCT atlas_organism_part FROM Expression ORDER BY atlas_organism_part limit 20'
     ).fetchall()]
     parts = [p for p in parts if p is not None]
     conn.close()
@@ -49,6 +49,7 @@ def genes(part):
         WHERE e.atlas_organism_part = ?
         GROUP BY g.ensembl_gene_id
         ORDER BY g.ensembl_gene_id
+        limit 20
     ''', (part,)).fetchall()
     conn.close()
     return render_template('genes.html', genes=genes, part=part)
@@ -64,6 +65,7 @@ def gene_names(part):
         NATURAL JOIN Expression as e
         WHERE e.atlas_organism_part = ?
         ORDER BY g.ensembl_gene_id
+        limit 50
     '''
     genes = conn.execute(query, (part,)).fetchall()
     conn.close()
@@ -84,6 +86,7 @@ def gene_detail(id):
         FROM Transcripts
         WHERE ensembl_gene_id = ?
         ORDER BY ensembl_transcript_id
+        limit 50
     ''', (id,)).fetchall()
 
     parts_rows = conn.execute('''
@@ -92,6 +95,7 @@ def gene_detail(id):
         JOIN Transcripts t ON e.ensembl_transcript_id = t.ensembl_transcript_id
         WHERE t.ensembl_gene_id = ?
         ORDER BY e.atlas_organism_part
+        limit 50
     ''', (id,)).fetchall()
 
     # Filtrage des None
@@ -131,7 +135,7 @@ def transcript_detail(id):
 
     # 1. Récupération du transcrit
     transcript_row = conn.execute(
-        'SELECT * FROM Transcripts WHERE Ensembl_Transcript_ID = ?', (id,)
+        'SELECT * FROM Transcripts WHERE Ensembl_Transcript_ID = ? limit 50', (id,)
     ).fetchone()
 
     if transcript_row is None:
@@ -143,7 +147,7 @@ def transcript_detail(id):
     # 2. Récupération du gène associé via Ensembl_Gene_ID
     gene_id = transcript['Ensembl_Gene_ID']
     gene_row = conn.execute(
-        'SELECT * FROM Genes WHERE Ensembl_Gene_ID = ?', (gene_id,)
+        'SELECT * FROM Genes WHERE Ensembl_Gene_ID = ? limit 50', (gene_id,)
     ).fetchone()
     gene = dict(gene_row) if gene_row else None
 
@@ -153,6 +157,7 @@ def transcript_detail(id):
         FROM Expression
         WHERE Ensembl_Transcript_ID = ?
         ORDER BY atlas_organism_part
+        limit 50
     ''', (id,)).fetchall()
 
     parts = [row['atlas_organism_part'] for row in part_rows if row['atlas_organism_part']]
