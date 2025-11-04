@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Gènes pour {{ part }}{% endblock %}
+{% block content %}
+  <h2>Gènes pour la partie : {{ part }}</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Ensembl Gene ID</th>
+        <th>Nom associé</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for gene in genes %}
+      <tr>
+        <td><a href="{{ url_for('gene_detail', id=gene['ensembl_gene_id']) }}">{{ gene['ensembl_gene_id'] }}</a></td>
+        <td><a href="{{ url_for('gene_detail', id=gene['ensembl_gene_id']) }}">{{ gene['associated_gene_name'] or "Non disponible" }}</a></td>
+        <td>
+          <a href="{{ url_for('edit_gene', id=gene['ensembl_gene_id']) }}">Éditer</a>
+          {% if gene.first_transcript_id %}
+            | <a href="{{ url_for('transcript_detail', id=gene.first_transcript_id) }}">Voir transcrit</a>
+          {% else %}
+            | <em>Pas de transcrit</em>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p><a href="{{ url_for('index') }}">← Retour à la liste des parties</a></p>
+{% endblock %}

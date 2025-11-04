@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Fiche du gène {{ gene['ensembl_gene_id'] }}{% endblock %}
+{% block content %}
+  <h2>Fiche du gène : {{ gene['ensembl_gene_id'] }}</h2>
+
+  <!-- Debug -->
+  <pre>Parts: {{ parts }}</pre>
+
+  <section>
+    <h3>Informations sur le gène</h3>
+    <table>
+      <tbody>
+        {% for key, value in gene.items() %}
+        <tr>
+          <th>{{ key }}</th>
+          <td>{{ value }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h3>Transcrits associés</h3>
+    {% if transcripts %}
+    <table>
+      <thead>
+        <tr>
+          <th>Identifiant du transcrit</th>
+          <th>Position début</th>
+          <th>Position fin</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in transcripts %}
+        <tr>
+          <td>{{ t['ensembl_transcript_id'] }}</td>
+          <td>{{ t['transcript_start'] }}</td>
+          <td>{{ t['transcript_end'] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p>Aucun transcrit trouvé pour ce gène.</p>
+    {% endif %}
+  </section>
+
+  <section>
+    <h3>Parties d’organismes associées</h3>
+    {% if parts %}
+      <ul>
+        {% for part in parts %}
+            <li><a href="{{ url_for('genes', part=part) }}">{{ part }}</a></li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>Aucune partie d’organisme associée.</p>
+    {% endif %}
+  </section>
+
+  <p><a href="{{ url_for('gene_names', part=parts[0] if parts else '') }}">← Retour à la liste des gènes</a></p>
+  <p><a href="{{ url_for('index') }}">← Retour à la liste des parties</a></p>
+{% endblock %}

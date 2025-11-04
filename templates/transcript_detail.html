@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Détails du transcrit {{ transcript.ensembl_transcript_id }}{% endblock %}
+
+{% block content %}
+  <h2>Détails du transcrit {{ transcript.ensembl_transcript_id }}</h2>
+  
+  <table>
+    {% for key, value in transcript.items() %}
+      <tr>
+        <th style="text-align:left; padding-right: 15px;">{{ key }}</th>
+        <td>{{ value }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+
+  <h3>Gène associé</h3>
+  {% if gene %}
+    <p>
+      <a href="{{ url_for('gene_detail', id=gene.ensembl_gene_id) }}">
+        {{ gene.associated_gene_name or gene.ensembl_gene_id }}
+      </a>
+    </p>
+  {% else %}
+    <p>Gène non trouvé.</p>
+  {% endif %}
+
+  <h3>Parties d'organismes associées</h3>
+  {% if parts %}
+    <ul>
+      {% for part in parts %}
+        <li><a href="{{ url_for('genes', part=part) }}">{{ part }}</a></li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Aucune partie d'organisme associée.</p>
+  {% endif %}
+{% endblock %}

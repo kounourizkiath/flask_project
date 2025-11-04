@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Atlas d'expression{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+  <div class="container">
+    <a href="{{ url_for('index') }}" class="logo-link">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+      <h1>Atlas d'expression</h1>
+    </a>
+  </div>
+</header>
+
+
+    <hr>
+  </header>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+  <footer>
+    <hr>
+    <p style="text-align:center;">&copy; 2025 Mon Projet</p>
+  </footer>
+</body>
+</html>

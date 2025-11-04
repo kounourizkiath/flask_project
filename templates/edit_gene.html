@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Modifier le gène {{ gene['ensembl_gene_id'] }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <header>
+        <h1>Modifier le gène {{ gene['ensembl_gene_id'] }}</h1>
+    </header>
+
+    <main>
+        <form method="post" action="">
+            <div class="form-group">
+                <label for="associated_gene_name">Nom du gène :</label>
+                <input type="text" id="associated_gene_name" name="associated_gene_name" value="{{ gene['associated_gene_name'] or '' }}" required />
+            </div>
+            <button type="submit" class="btn-primary">Enregistrer</button>
+            <a href="{{ url_for('gene_detail', id=gene['ensembl_gene_id']) }}" class="btn-secondary">Annuler</a>
+        </form>
+    </main>
+</body>
+</html>
